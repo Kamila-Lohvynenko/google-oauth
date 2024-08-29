@@ -1,6 +1,7 @@
 import express from 'express';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import {
+  getOAuthURLController,
   loginUserController,
   logoutUserController,
   refreshController,
@@ -50,5 +51,7 @@ router.post(
   validateBody(resetPasswordSchema),
   ctrlWrapper(resetPasswordController),
 );
+
+router.get('/get-oauth-url', ctrlWrapper(getOAuthURLController));
 
 export default router;

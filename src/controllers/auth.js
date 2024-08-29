@@ -8,6 +8,9 @@ import {
 } from '../services/auth.js';
 import { setSessionCookies } from '../utils/setSessionCookies.js';
 
+import '../utils/googleOAuth2.js';
+import { generateAuthUrl } from '../utils/googleOAuth2.js';
+
 export const registerUserController = async (req, res) => {
   const user = {
     name: req.body.name,
@@ -86,4 +89,16 @@ export const resetPasswordController = async (req, res) => {
     message: 'Password has been successfully reset.',
     data: {},
   });
+};
+
+export const getOAuthURLController = async (req, res) => {
+  const url = generateAuthUrl();
+
+  res
+    .status(200)
+    .send({
+      status: 200,
+      message: 'Successfully get Google OAuth URL',
+      data: { url },
+    });
 };
