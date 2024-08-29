@@ -1,0 +1,20 @@
+{
+  "name": "google-oauth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js",
+    "start": "node ./src/index.js"
+  },
+  "keywords": [],
+  "author": "Kamila Lohvynenko <kamila.lohvynenko@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "eslint": "^9.9.1",
+    "globals": "^15.9.0",
+    "nodemon": "^3.1.4"
+  }
+}
