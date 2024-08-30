@@ -15,6 +15,6 @@ export const errorMiddleware = (err, req, res, next) => {
   res.status(500).send({
     status: 500,
     message: 'Something went wrong',
-    data: err.message,
+    data: 'Internal serves error',
   });
 };
