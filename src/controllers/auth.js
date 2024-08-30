@@ -5,6 +5,7 @@ import {
   registerUser,
   requestResetEmail,
   resetPassword,
+  loginOrRegisterWithGoogle,
 } from '../services/auth.js';
 import { setSessionCookies } from '../utils/setSessionCookies.js';
 
@@ -94,11 +95,23 @@ export const resetPasswordController = async (req, res) => {
 export const getOAuthURLController = async (req, res) => {
   const url = generateAuthUrl();
 
-  res
-    .status(200)
-    .send({
-      status: 200,
-      message: 'Successfully get Google OAuth URL',
-      data: { url },
-    });
+  res.status(200).send({
+    status: 200,
+    message: 'Successfully get Google OAuth URL',
+    data: { url },
+  });
+};
+
+export const confirmOAuthController = async (req, res) => {
+  const { code } = req.body;
+
+  const session = await loginOrRegisterWithGoogle(code);
+
+  setSessionCookies(res, session);
+
+  res.status(200).send({
+    status: 200,
+    message: 'User successfully logged in',
+    data: { accessToken: session.accessToken },
+  });
 };

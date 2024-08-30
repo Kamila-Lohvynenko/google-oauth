@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 
 import handlebars from 'handlebars';
 import createHttpError from 'http-errors';
@@ -10,6 +11,7 @@ import { createSession } from '../utils/createSession.js';
 import { sendMail } from '../utils/sendMail.js';
 import { SMTP, ERROR_NAME } from '../constants/index.js';
 import jwt from 'jsonwebtoken';
+import { validateCode } from '../utils/googleOAuth2.js';
 
 export const registerUser = async (payload) => {
   const maybeUser = await User.findOne({ email: payload.email });
@@ -143,4 +145,39 @@ export const resetPassword = async (password, token) => {
     { _id: decoded.sub },
     { password: hashedPassword },
   );
+};
+
+export const loginOrRegisterWithGoogle = async (code) => {
+  const ticket = await validateCode(code);
+  const payload = ticket.getPayload();
+
+  if (typeof payload === 'undefined') {
+    throw createHttpError(401, 'Unauthorized');
+  }
+
+  const user = await User.findOne({ email: payload.email });
+  const password = await bcrypt.hash(
+    crypto.randomBytes(30).toString('base64'),
+    10,
+  );
+  console.log({ user });
+
+  if (user === null) {
+    const createdUser = await User.create({
+      email: payload.email,
+      name: payload.name,
+      password,
+    });
+    return await Session.create({
+      userId: createdUser._id,
+      ...createSession(),
+    });
+  }
+
+  await Session.deleteOne({ userId: user._id });
+
+  return await Session.create({
+    userId: user._id,
+    ...createSession(),
+  });
 };
