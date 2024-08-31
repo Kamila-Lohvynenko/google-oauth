@@ -9,6 +9,7 @@ import contactRoutes from './routers/contacts.js';
 import authRouter from './routers/auth.js';
 import cookieParser from 'cookie-parser';
 import { authenticate } from './middlewares/authenticate.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 export const setupServer = () => {
   const app = express();
@@ -32,6 +33,8 @@ export const setupServer = () => {
   app.get('/', (req, res) => {
     res.send('Your contacts book');
   });
+  app.use('/api-docs', swaggerDocs());
+
   app.use('/auth', authRouter);
   app.use('/contacts', authenticate, contactRoutes);
   app.use(notFoundMiddleware);
