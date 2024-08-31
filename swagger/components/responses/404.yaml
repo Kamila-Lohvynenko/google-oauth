@@ -1,0 +1,15 @@
+description: 'The requested resource could not be found'
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: The requested resource could not be found!
